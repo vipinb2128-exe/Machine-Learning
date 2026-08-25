@@ -1,0 +1,45 @@
+import numpy as np
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# Features: RAM, Battery, Camera, Storage
+X = np.array([
+    [2, 2500, 8, 32],
+    [3, 3000, 12, 64],
+    [4, 3500, 16, 64],
+    [4, 4000, 20, 128],
+    [6, 4500, 32, 128],
+    [8, 5000, 48, 256],
+    [8, 5500, 64, 256],
+    [12, 6000, 108, 512],
+    [3, 2800, 10, 32],
+    [6, 4200, 24, 128]
+])
+
+# 0 = Low, 1 = Medium, 2 = High
+y = [0, 0, 1, 1, 2, 2, 2, 2, 0, 1]
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42
+)
+
+# Create model
+model = DecisionTreeClassifier(random_state=42)
+
+# Train model
+model.fit(X_train, y_train)
+
+# Predict
+pred = model.predict(X_test)
+
+print("Predicted:", pred)
+print("Actual:", y_test)
+print("Accuracy:", accuracy_score(y_test, pred))
+
+# Predict new mobile
+new_mobile = [[8, 5000, 50, 256]]
+
+print("New Mobile Price Category:",
+      model.predict(new_mobile))

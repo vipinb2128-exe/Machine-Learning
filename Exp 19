@@ -1,0 +1,117 @@
+import numpy as np
+from sklearn.naive_bayes import GaussianNB
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+# Bank Loan Dataset
+# Features: Income, Age, Loan Amount, Credit Score
+X = np.array([
+    [25000, 22, 50000, 550],
+    [30000, 25, 40000, 580],
+    [45000, 30, 30000, 650],
+    [50000, 35, 25000, 700],
+    [60000, 40, 20000, 750],
+    [70000, 45, 15000, 800],
+    [28000, 24, 60000, 520],
+    [55000, 38, 25000, 720],
+    [65000, 42, 18000, 780],
+    [35000, 28, 45000, 600],
+    [40000, 32, 35000, 640],
+    [75000, 48, 12000, 820],
+    [27000, 23, 55000, 530],
+    [48000, 34, 28000, 690],
+    [58000, 39, 22000, 740]
+])
+
+# 0 = Rejected, 1 = Approved
+y = np.array([
+    0, 0, 1, 1, 1,
+    1, 0, 1, 1, 0,
+    1, 1, 0, 1, 1
+])
+
+# Display dataset
+print("BANK LOAN DATASET")
+print("-----------------")
+
+for i in range(len(X)):
+    status = "Approved" if y[i] == 1 else "Rejected"
+    print("Customer", i + 1,
+          ": Income =", X[i][0],
+          "Age =", X[i][1],
+          "Loan =", X[i][2],
+          "Credit Score =", X[i][3],
+          "Status =", status)
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.3,
+    random_state=42
+)
+
+# Create Naive Bayes model
+model = GaussianNB()
+
+# Train model
+model.fit(X_train, y_train)
+
+# Predict test data
+pred = model.predict(X_test)
+
+print("\nTEST RESULTS")
+print("------------")
+
+for i in range(len(pred)):
+    actual = "Approved" if y_test[i] == 1 else "Rejected"
+    predicted = "Approved" if pred[i] == 1 else "Rejected"
+
+    print("Customer", i + 1,
+          ": Actual =", actual,
+          ", Predicted =", predicted)
+
+# Accuracy
+accuracy = accuracy_score(y_test, pred)
+
+print("\nAccuracy:", round(accuracy, 2))
+
+# Confusion Matrix
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, pred))
+
+# Prediction probabilities
+probability = model.predict_proba(X_test)
+
+print("\nPREDICTION PROBABILITIES")
+print("------------------------")
+
+for i in range(len(probability)):
+    print(
+        "Customer", i + 1,
+        ": Rejected =", round(probability[i][0], 2),
+        ", Approved =", round(probability[i][1], 2)
+    )
+
+# New customer prediction
+new_customer = [[55000, 35, 25000, 700]]
+
+result = model.predict(new_customer)
+prob = model.predict_proba(new_customer)
+
+print("\nNEW CUSTOMER PREDICTION")
+print("-----------------------")
+print("Income:", new_customer[0][0])
+print("Age:", new_customer[0][1])
+print("Loan Amount:", new_customer[0][2])
+print("Credit Score:", new_customer[0][3])
+
+if result[0] == 1:
+    print("Loan Status: APPROVED")
+else:
+    print("Loan Status: REJECTED")
+
+print("Probability of Rejection:",
+      round(prob[0][0], 2))
+
+print("Probability of Approval:",
+      round(prob[0][1], 2))

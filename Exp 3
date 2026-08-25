@@ -1,0 +1,43 @@
+# Install required package
+!pip install graphviz -q
+
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+from sklearn.tree import DecisionTreeClassifier, export_text
+
+# Read dataset
+data = pd.read_csv("play_tennis.csv")
+
+print("Dataset:\n")
+print(data)
+
+# Convert categorical values into numbers
+le = LabelEncoder()
+
+data_encoded = data.copy()
+
+for col in data_encoded.columns:
+    data_encoded[col] = le.fit_transform(data_encoded[col])
+
+# Split features and target
+X = data_encoded.iloc[:, :-1]
+y = data_encoded.iloc[:, -1]
+
+# Build ID3 Decision Tree (Entropy)
+clf = DecisionTreeClassifier(criterion="entropy", random_state=0)
+clf.fit(X, y)
+
+print("\nDecision Tree Rules:\n")
+print(export_text(clf, feature_names=list(X.columns)))
+
+# New sample
+# Outlook=Sunny, Temperature=Cool, Humidity=High, Wind=Strong
+new_sample = [[2, 0, 0, 0]]
+
+prediction = clf.predict(new_sample)
+
+print("\nPrediction for New Sample:")
+if prediction[0] == 1:
+    print("Play Tennis = Yes")
+else:
+    print("Play Tennis = No")

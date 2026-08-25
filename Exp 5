@@ -1,0 +1,43 @@
+# K-Nearest Neighbours (K-NN) Algorithm
+
+from sklearn.neighbors import KNeighborsClassifier
+import numpy as np
+
+# Training Data
+X = np.array([
+    [2, 4],
+    [4, 4],
+    [4, 6],
+    [6, 2],
+    [6, 4],
+    [8, 4]
+])
+
+# Target Labels
+y = np.array(['A', 'A', 'A', 'B', 'B', 'B'])
+
+# Create KNN Model
+knn = KNeighborsClassifier(n_neighbors=3)
+
+# Train the Model
+knn.fit(X, y)
+
+# Predict Training Data
+predictions = knn.predict(X)
+
+print("Training Data:")
+print(X)
+
+print("\nActual Labels:")
+print(y)
+
+print("\nPredicted Labels:")
+print(predictions)
+
+# Test a New Sample
+new_sample = np.array([[5, 3]])
+
+prediction = knn.predict(new_sample)
+
+print("\nNew Sample:", new_sample)
+print("Predicted Class:", prediction[0])

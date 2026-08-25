@@ -1,0 +1,43 @@
+# Compare Linear Regression and Polynomial Regression
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+
+# Sample Dataset
+X = np.array([1,2,3,4,5,6,7,8,9,10]).reshape(-1,1)
+y = np.array([1,4,9,16,25,36,49,64,81,100])
+
+# Linear Regression
+linear_model = LinearRegression()
+linear_model.fit(X, y)
+y_linear = linear_model.predict(X)
+
+# Polynomial Regression (Degree = 2)
+poly = PolynomialFeatures(degree=2)
+X_poly = poly.fit_transform(X)
+
+poly_model = LinearRegression()
+poly_model.fit(X_poly, y)
+y_poly = poly_model.predict(X_poly)
+
+# Display Predictions
+print("Actual Values:")
+print(y)
+
+print("\nLinear Regression Predictions:")
+print(np.round(y_linear,2))
+
+print("\nPolynomial Regression Predictions:")
+print(np.round(y_poly,2))
+
+# Plot Comparison
+plt.scatter(X, y, color='blue', label='Actual Data')
+plt.plot(X, y_linear, color='red', label='Linear Regression')
+plt.plot(X, y_poly, color='green', label='Polynomial Regression')
+plt.title("Linear vs Polynomial Regression")
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.legend()
+plt.show()
